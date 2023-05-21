@@ -1,5 +1,6 @@
 import discord  # https://guide.pycord.dev/installation/
 import json  # for storing data
+from discord import Option
 
 # declare client
 intents = discord.Intents.all()  # was default()
@@ -32,7 +33,8 @@ async def copy(ctx):
 
 
 @bot.slash_command(description="Paste the saved message data.", guild_ids=guild_ids)
-async def paste(ctx):
+async def paste(ctx, start_at: Option(int, "The message number to start at. Used for debugging",
+                                      required=False, default=1)):
     await ctx.defer()
     all_messages = await copied_channel.history(limit=None, oldest_first=True).flatten()
     all_messages_count = len(all_messages)
@@ -43,12 +45,19 @@ async def paste(ctx):
     embed.set_footer(text=f"{loading_bar}\n0/{all_messages_count} Sent")
     loading_message = await ctx.followup.send(embed=embed)
 
-    # create the webhook
-    history_webhook = await ctx.channel.create_webhook(name="CopyMessages", avatar=None, reason="For CopyMessages")
+    webhooks = await ctx.channel.webhooks()
+    history_webhook = None
+    for webhook in webhooks:
+        if webhook.name == "CopyMessages":
+            history_webhook = webhook
+            break
+    else:
+        # create the webhook
+        history_webhook = await ctx.channel.create_webhook(name="CopyMessages", avatar=None, reason="For CopyMessages")
 
     count = 0
     # loop through messages
-    for message in all_messages:
+    for message in all_messages[start_at-1:]:
         try:
             content = None
             files = []
