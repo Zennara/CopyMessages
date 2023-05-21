@@ -37,7 +37,20 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
                                       required=False, default=1)):
     await ctx.defer()
     all_messages = await copied_channel.history(limit=None, oldest_first=True).flatten()
-    all_messages_count = len(all_messages)
+    all_messages_count = len(all_messages) - start_at+1
+
+    # check start at parameter
+    if all_messages_count > len(all_messages):
+        embed = discord.Embed(color=0x880808, title=f":x: Invalid `start_at` Parameter",
+                              description="Higher then the total message count.")
+        await ctx.respond(embed=embed, ephemeral=True)
+        return
+    elif all_messages_count <= 0:
+        embed = discord.Embed(color=0x880808, title=f":x: Invalid `start_at` Parameter",
+                              description="Can not be below `0`.")
+        await ctx.respond(embed=embed, ephemeral=True)
+        return
+
     embed = discord.Embed(color=0xFFFF00,
                           title=f"⏳ Pasting {all_messages_count} Messages",
                           description=f"This may take a while. This message will update every {UPDATE_EVERY} messages.")
