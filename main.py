@@ -74,7 +74,7 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
 
     percentiles = []
     for multiple in range(1, 10):
-        percentiles.append(int(all_messages_count/UPDATE_EVERY)*multiple+1)
+        percentiles.append(int(all_messages_count / UPDATE_EVERY) * multiple + 1)
     count = 0
     # loop through messages
     for message in all_messages[start_at - 1:]:
@@ -130,18 +130,18 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
                     text = f"<:pin:1110118275662237759> {message.author.mention} pinned **a message** to this channel. See all **pinned messages**."
                 case discord.MessageType.new_member:
                     join_messages = ["Yay you made it, User!",
-                               "User is here.",
-                               "User just showed up!",
-                               "User hopped into the server.",
-                               "Welcome User. Say hi!",
-                               "User joined the party.",
-                               "Everyone welcome User!",
-                               "Good to see you, User.",
-                               "Glad you're here, User.",
-                               "User just landed.",
-                               "User just slid into the server.",
-                               "A wild User appeared.",
-                               "Welcome, User. We hope you brought pizza."]
+                                     "User is here.",
+                                     "User just showed up!",
+                                     "User hopped into the server.",
+                                     "Welcome User. Say hi!",
+                                     "User joined the party.",
+                                     "Everyone welcome User!",
+                                     "Good to see you, User.",
+                                     "Glad you're here, User.",
+                                     "User just landed.",
+                                     "User just slid into the server.",
+                                     "A wild User appeared.",
+                                     "Welcome, User. We hope you brought pizza."]
                     random_element = random.choice(join_messages)
                     text = "<:join:1110122592955813988> " + random_element.replace('User', message.author.mention)
                 case discord.MessageType.premium_guild_subscription:
@@ -165,7 +165,6 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
                 await history_webhook.send(content=text, avatar_url=avatar, username=nick)
 
         count += 1
-
 
     embed = discord.Embed(color=0x00FF00, title=f"✅ {count} Messages Pasted")
     await loading_message.edit(embed=embed)
