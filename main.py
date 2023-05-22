@@ -1,6 +1,7 @@
 import discord  # https://guide.pycord.dev/installation/
 import json  # for storing data
 from discord import Option
+import random
 
 # declare client
 intents = discord.Intents.all()  # was default()
@@ -78,10 +79,8 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
     # loop through messages
     for message in all_messages[start_at - 1:]:
         try:
-            content = None
             files = []
             embeds = []
-            nick = None
 
             # get files
             for attachment in message.attachments:
@@ -108,8 +107,6 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
                                        username=nick,
                                        avatar_url=avatar)
 
-            count += 1
-
             if count in percentiles:
                 # edit message if applicable
                 embed = discord.Embed(color=0xFFFF00,
@@ -124,13 +121,51 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
                 await loading_message.edit(embed=embed)
             print(count)
         except Exception as ex:
-            print(message)
-            embed = discord.Embed(color=0x880808,
-                                  title = f":x: Failed On Message {count}",
-                                  description = f"> ```{str(ex)}```",
-                                  url=message.jump_url)
-            await loading_message.edit(embed=embed)
-            return
+            nick = "Server Message"
+            avatar = "https://cdn.discordapp.com/attachments/929182726203002920/1110112696889786418/Discord-Logo-Circle.png"
+            default = False
+            text = ""
+            match message.type:
+                case discord.MessageType.pins_add:
+                    text = f"<:pin:1110118275662237759> {message.author.mention} pinned **a message** to this channel. See all **pinned messages**."
+                case discord.MessageType.new_member:
+                    join_messages = ["Yay you made it, User!",
+                               "User is here.",
+                               "User just showed up!",
+                               "User hopped into the server.",
+                               "Welcome User. Say hi!",
+                               "User joined the party.",
+                               "Everyone welcome User!",
+                               "Good to see you, User.",
+                               "Glad you're here, User.",
+                               "User just landed.",
+                               "User just slid into the server.",
+                               "A wild User appeared.",
+                               "Welcome, User. We hope you brought pizza."]
+                    random_element = random.choice(join_messages)
+                    text = "<:join:1110122592955813988> " + random_element.replace('User', message.author.mention)
+                case discord.MessageType.premium_guild_subscription:
+                    text = f"<:nitro:1110122830030446694> {message.author.mention} just boosted the server!"
+                case discord.MessageType.premium_guild_tier_1:
+                    text = f"<:nitro:1110122830030446694> {message.author.mention} just boosted the server! {message.guild.name} has achieved **Level 1!**"
+                case discord.MessageType.premium_guild_tier_2:
+                    text = f"<:nitro:1110122830030446694> {message.author.mention} just boosted the server! {message.guild.name} has achieved **Level 2!**"
+                case discord.MessageType.premium_guild_tier_3:
+                    text = f"<:nitro:1110122830030446694> {message.author.mention} just boosted the server! {message.guild.name} has achieved **Level 3!**"
+                case _:
+                    # default case
+                    default = True
+                    embed = discord.Embed(color=0x880808,
+                                          title=f":x: Failed on Message {count}",
+                                          description=f"``` > {str(ex)} ```",
+                                          url=message.jump_url)
+                    await loading_message.edit(embed=embed)
+                    await history_webhook.send(embed=embed, avatar_url=avatar, username=nick)
+            if not default:
+                await history_webhook.send(content=text, avatar_url=avatar, username=nick)
+
+        count += 1
+
 
     embed = discord.Embed(color=0x00FF00, title=f"✅ {count} Messages Pasted")
     await loading_message.edit(embed=embed)
