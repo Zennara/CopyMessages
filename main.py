@@ -82,18 +82,23 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
             files = []
             embeds = []
 
+            # get content
+            content = message.content
+
             # get files
             for attachment in message.attachments:
-                file = await attachment.to_file()
-                files.append(file)
+                file_size_bytes = attachment.size
+                file_size_mb = file_size_bytes / 1048576
+                if file_size_mb <= 25:
+                    file = await attachment.to_file()
+                    files.append(file)
+                else:
+                    content += f"\n{attachment.url}"
 
             # get embeds
             for old_embed in message.embeds:
                 if old_embed.type == "rich":
                     embeds.append(old_embed)
-
-            # get content
-            content = message.content
 
             # get name
             nick = message.author.display_name
