@@ -124,6 +124,7 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
                 await loading_message.edit(embed=embed)
             print(count)
         except Exception as ex:
+            print(message)
             embed = discord.Embed(color=0x880808,
                                   title = f":x: Failed On Message {count}",
                                   description = f"> ```{str(ex)}```",
@@ -133,6 +134,15 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
 
     embed = discord.Embed(color=0x00FF00, title=f"✅ {count} Messages Pasted")
     await loading_message.edit(embed=embed)
+
+
+@bot.message_command(name="Get Message Number", guild_ids=guild_ids)
+async def get_message_number(ctx, message: discord.Message):
+    await ctx.defer()
+    messages = await message.channel.history(limit=None, oldest_first=True).flatten()
+    message_number = messages.index(message) + 1
+    embed = discord.Embed(color=0x00FF00, title=f"Message Number: {message_number}", url=message.jump_url)
+    await ctx.followup.send(embed=embed)
 
 
 # run bot
