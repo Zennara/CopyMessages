@@ -159,8 +159,8 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
                                           title=f":x: Failed on Message {count}",
                                           description=f"``` > {str(ex)} ```",
                                           url=message.jump_url)
-                    await loading_message.edit(embed=embed)
-                    await history_webhook.send(embed=embed, avatar_url=avatar, username=nick)
+                    await history_webhook.send(content="CopyMessages Message Failed",
+                                               embed=embed, avatar_url=avatar, username=nick)
             if not default:
                 await history_webhook.send(content=text, avatar_url=avatar, username=nick)
 
