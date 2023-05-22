@@ -1,7 +1,7 @@
 # CopyMessages
 A simple bot used to copy and paste message history between channels. It can also work copying messages from server to server; however the bot must be in both servers.
 
-### [Invite the Bot](https://discord.com/api/oauth2/authorize?client_id=1094873646943703071&permissions=533113166912&scope=applications.commands%20bot)
+# [Invite the Bot](https://discord.com/api/oauth2/authorize?client_id=1094873646943703071&permissions=533113166912&scope=applications.commands%20bot)
 
 ## Supported Messages
 - ### System Messages
