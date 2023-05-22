@@ -89,7 +89,8 @@ async def paste(ctx, start_at: Option(int, "The message number to start at. Used
 
             # get embeds
             for old_embed in message.embeds:
-                embeds.append(old_embed)
+                if old_embed.type == "rich":
+                    embeds.append(old_embed)
 
             # get content
             content = message.content
