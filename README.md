@@ -1,7 +1,9 @@
 # CopyMessages
 A simple bot used to copy and paste message history between channels. It can also work copying messages from server to server; however the bot must be in both servers.
 
-Has support for the following messages:
+### [Invite the Bot](https://discord.com/api/oauth2/authorize?client_id=1094873646943703071&permissions=533113166912&scope=applications.commands%20bot)
+
+## Supported Messages
 - ### System Messages
   - Join messages
   - Boost messages
@@ -18,6 +20,11 @@ Has support for the following messages:
 - ### Attachments over 25mb
   - If the attachment is over 25mb, it will simply append the link to the end of the message.
 - ### Images, attachments, files
+
+## Things that Won't Work
+- thread creations (planned)
+- views (can not implement)
+- other system messages (planned)
 
 
 # Usage
